@@ -1,0 +1,16 @@
+Feature: OrangeHrm Application Functionality Test
+Scenario: OrangeHRM Application LogIn Page Text
+Given User Should Open Chrome Browser in the system
+When User enters OrangeHRM Application Url Address
+Then User should be navigated to OrangeHRM Application LogIn Page
+Then User should close the OrangeHrm Application with the Browser
+
+
+Secnario: OrangeHRM Application LogIn Page Text
+Given User Should Open Chrome Browser in the system
+When User enters OrangeHRM Application Url Address
+Then User should be navigated to OrangeHRM Application LogIn Page
+Then User should enter UserName and Password and click on login Button
+Then User should be navigated to OrangeHRM Application Home Page
+Then User should logout of the OrangeHRM Application
+Then User should close the OrangeHrm Application with the Browser

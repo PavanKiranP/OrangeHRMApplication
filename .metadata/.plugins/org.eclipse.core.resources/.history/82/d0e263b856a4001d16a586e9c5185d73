@@ -1,0 +1,66 @@
+package stepDefinitions;
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+
+
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
+public class OrangeHRMApplicationMethods {
+	
+	WebDriver driver;
+	
+	@Given("^User Should Open Chrome Browser in the system$")
+	public void user_Should_Open_Chrome_Browser_in_the_system() 
+	{
+
+		System.setProperty("webdriver.chrome.driver","./BrowserDriverFiles/chromedriver.exe");
+		driver = new ChromeDriver();		
+		//Maximizing the Browser
+		driver.manage().window().maximize();
+		//Web Page Wait- for the Application to be loaded on the Browser
+		driver.manage().timeouts().pageLoadTimeout(40,TimeUnit.SECONDS);
+		//Implicit Wait
+		//its Global Wait/Smart Wait
+		driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
+		//driver.manage().deleteAllCookies();
+	}
+
+	@When("^User enters OrangeHRM Application Url Address$")
+	public void user_enters_OrangeHRM_Application_Url_Address() 
+	{
+		String applicationUrlAdress="http://127.0.0.1/orangehrm-4.2.0.1/symfony/web/index.php/auth/login";
+		driver.get(applicationUrlAdress);
+	}
+
+	@Then("^User should be navigated to OrangeHRM Application LogIn Page$")
+	public void user_should_be_navigated_to_OrangeHRM_Application_LogIn_Page() 
+	{
+		By LoginPageTextLocator=By.id("logInPanelHeading");
+		WebElement LoginPageText=driver.findElement(LoginPageTextLocator);
+		String Actual_LginPageText=LoginPageText.getText();
+		String Expected_LginPageText="LOGIN Panel";
+		if(Actual_LginPageText.equals(Expected_LginPageText))
+		{
+			System.out.println("Navigated to OrangeHRM Application Login Page - PASS");
+		}
+		else
+		{
+			System.out.println("Failed to Navigate to OrangeHRM Application Login Page - FAIL");
+		}
+	}
+
+	@Then("^User should close the OrangeHrm Application with the Browser$")
+	public void user_should_close_the_OrangeHrm_Application_with_the_Browser()
+	{
+	    
+	}
+
+}

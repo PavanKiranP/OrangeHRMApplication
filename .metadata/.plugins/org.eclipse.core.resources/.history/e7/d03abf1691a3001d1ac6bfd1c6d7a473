@@ -1,0 +1,330 @@
+package com.OrangeHRMApplicationTestCases;
+
+import java.io.IOException;
+import java.util.Properties;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.testng.annotations.Test;
+
+import com.OrangeHRMApplication.BaseTest;
+import com.Utility.ExcelCommonMethods;
+import com.Utility.Log;
+import com.Utility.OHRMScreenShot;
+import com.Utility.OrangeHRMProperty;
+
+public class AddEmployeeFunctionality extends BaseTest {
+	
+	Properties property;
+	String excelFileInputPath="D:\\WorkSpace\\OrangeHRM\\src\\main\\java\\com\\OrangeHRMApplicationTestDataFiles\\AddEmployee.xlsx";
+	String excelFileOutputPath="D:\\WorkSpace\\OrangeHRM\\src\\main\\java\\com\\OrangeHRMApplicationTestDataResultFiles\\OrangeHRMApplicationAddEmployeeTestResultsFile.xlsx";
+	String SheetName="Sheet1";
+	ExcelCommonMethods excelFile;
+	int rowIndex;
+	@Test(priority=1,description="validating login Page-LOGIN Panel Text")
+	public void validateLoginPageTest() throws IOException {
+		
+		excelFile=new ExcelCommonMethods(excelFileInputPath, excelFileOutputPath, SheetName);
+		property=OrangeHRMProperty.loadProperty();
+		
+		By loginPageLoginPanelTextLocator=By.id(property.getProperty("logInPageLogInPanelProperty"));
+		String actual_loginPageLoginPanelText=driver.findElement(loginPageLoginPanelTextLocator).getText();
+		excelFile.setCellValue(1, 1, actual_loginPageLoginPanelText);
+		String expected_loginPageLoginPanelText=excelFile.getCellValue(1, 0);
+		
+		if(actual_loginPageLoginPanelText.equals(expected_loginPageLoginPanelText))
+		{
+			Log.info("Successfully navigated to the OrangeHRM Application - PASS");
+			excelFile.setCellValue(1, 2, "Successfully navigated to the OrangeHRM Application - PASS" );
+		}
+		else
+		{
+			Log.info("Failed to navigate to the OrangeHRM Application - FAIL");
+			excelFile.setCellValue(1, 2, "Failed to navigate to the OrangeHRM Application - FAIL" );
+		}
+		String actual_loginPageTitle=driver.getTitle();
+		excelFile.setCellValue(1, 4, actual_loginPageTitle);
+		String expected_loginPageTitle=excelFile.getCellValue(1, 3);
+		if(actual_loginPageTitle.equals(expected_loginPageTitle))
+		{
+			Log.info("Successfully Validated the OrangeHRM Application Login page Title - PASS");
+			excelFile.setCellValue(1, 5, "Successfully Validated the OrangeHRM Application Login page Title - PASS" );
+		}
+		else
+		{
+			Log.info("Failed to navigate to the OrangeHRM Application - FAIL");
+			excelFile.setCellValue(1, 5, "Failed to navigate to the OrangeHRM Application - FAIL" );
+		}
+	
+	}
+	
+	@Test(priority=2,description="OrangeHRM Application Login Functionality Test")
+	public void validateLoginFunctionalityTest() throws IOException 
+	{
+	 rowIndex=1;
+		while(true) 
+		{
+			try
+			{
+				String userName=excelFile.getCellValue(rowIndex, 6);
+				String password=excelFile.getCellValue(rowIndex, 7);
+				By userNameElementLocator=By.id(property.getProperty("UserNameProperty"));
+				WebElement userNameElemen=driver.findElement(userNameElementLocator);
+				userNameElemen.clear();
+				userNameElemen.sendKeys(userName);
+				By PasswordElementLocator=By.id(property.getProperty("PasswordProperty"));
+				WebElement PasswordElemen=driver.findElement(PasswordElementLocator);
+				PasswordElemen.clear();
+				PasswordElemen.sendKeys(password);
+				By LoginPageLoginButtonLocator=By.className(property.getProperty("logInButtonProperty"));
+				driver.findElement(LoginPageLoginButtonLocator).click();
+				if(isLoginPage())
+				{
+					//Login page
+					Log.info("Failed to Navigate to the OrangeHRM Application - FAIL");
+					OHRMScreenShot.takeScreenShot(driver,userName+password);
+					excelFile.setCellValue(rowIndex, 8, "Failed to Navigate to the OrangeHRM Application - FAIL");	
+				}
+				else
+				{
+					//HomePage
+					Log.info("Successfully Navigated to the OrangeHRM Application - Pass");
+					AddEmployeeFunctionalityTest();
+				}	
+			rowIndex++;
+				
+			}
+			catch (Exception e) 
+			{
+				break;
+			}
+			
+		}
+	
+	 excelFile.saveExcelData();
+	}
+	private boolean isLoginPage() 
+	{
+		
+		try 
+		{	
+			By LoginPageInvalidMessageLocator=By.id(property.getProperty("InvalidMessageproperty"));
+			return driver.findElement(LoginPageInvalidMessageLocator).isDisplayed();
+		}
+		catch (Exception e)
+		{
+			return false;		
+		}
+	}
+	@Test(priority=3,description="AddEmployee Functionality Test")
+	public void AddEmployeeFunctionalityTest() throws IOException, InterruptedException 
+	{
+		By PimL=By.linkText(property.getProperty("PimProperty"));
+		WebElement Pim=driver.findElement(PimL);
+		Actions action=new Actions(driver);
+		action.moveToElement(Pim).build().perform();
+		By addEmployeeL=By.id(property.getProperty("AddEmployeeProperty"));
+		WebElement addEmployee=driver.findElement(addEmployeeL);
+		String actual_addEmployeeText=addEmployee.getText();
+		String expected_addEmployeeText=excelFile.getCellValue(1, 12);
+		excelFile.setCellValue(1, 13, actual_addEmployeeText);
+		if(actual_addEmployeeText.equals(expected_addEmployeeText))
+		{
+			Log.info("Successfully Navigated to Add Employee Page in OrangeHRM Application - PASS");
+			excelFile.setCellValue(1, 14, "Successfully Navigated to Add Employee Page in OrangeHRM Application - PASS");
+		}
+		else
+		{
+			Log.info("Failed to Navigate to Add Employee Page in OrangeHRM Application - FAIL");
+			excelFile.setCellValue(1, 14, "Failed to Navigate to Add Employee Page in OrangeHRM Application - FAIL");
+		}
+		addEmployee.click();
+		rowIndex=1;
+		while(true)
+		{
+			//FirstName
+			By FirstNameL=By.id(property.getProperty("FirstNameProperty"));
+			WebElement FirstName=driver.findElement(FirstNameL);
+			String expected_FirstNameTestData=excelFile.getCellValue(rowIndex, 15);
+			FirstName.sendKeys(expected_FirstNameTestData);
+			//MiddleName
+			String expected_MiddleNameTestData=excelFile.getCellValue(rowIndex, 16);
+			action.sendKeys(Keys.TAB).build().perform();
+			action.sendKeys(expected_MiddleNameTestData).build().perform();
+			//LastName
+			String expected_lastNameTestData=excelFile.getCellValue(rowIndex, 17);
+			action.sendKeys(Keys.TAB).build().perform();
+			action.sendKeys(expected_lastNameTestData).build().perform();
+			
+			//EmployeeId
+			By EmployeeIdLocater=By.id(property.getProperty("EmployeeIdProperty"));
+			WebElement EmployeeId=driver.findElement(EmployeeIdLocater);
+			EmployeeId.clear();
+			
+			 
+			
+			
+			String Expected_EmployeeIdTestData=excelFile.getCellValue(rowIndex, 18).toString();
+			EmployeeId.sendKeys(Expected_EmployeeIdTestData);
+			
+			
+			
+			//Photograph
+			action.sendKeys(Keys.TAB).build().perform();
+			action.sendKeys(Keys.ENTER).build().perform();
+			Thread.sleep(5000);
+			java.lang.Runtime.getRuntime().exec("D:\\WorkSpace\\OrangeHRM\\logoScript3.exe");
+			Thread.sleep(3000);
+			
+			
+			By saveButtonLocator=By.id(property.getProperty("SaveButtonProperty"));
+			WebElement saveButton=driver.findElement(saveButtonLocator);
+			saveButton.click();
+		
+		
+		
+			By PersonalDetailsPageTextLocator=By.className(property.getProperty("PersonalDetailsPageTextLocator"));
+			String actual_PersonalDetailsPageText=driver.findElement(PersonalDetailsPageTextLocator).getAttribute("value");
+			String expected_PersonalDetailsPageText=excelFile.getCellValue(rowIndex, 19);
+			excelFile.setCellValue(rowIndex, 18, actual_PersonalDetailsPageText);
+			if(actual_PersonalDetailsPageText.equals(expected_PersonalDetailsPageText))
+			{
+				Log.info("Successfully Navigated to OrangeHRM Application PersonalDetailsPage - Pass");
+				excelFile.setCellValue(rowIndex, 21, "Successfully Navigated to OrangeHRM Application PersonalDetailsPage - Pass");
+			}
+			else 
+			{
+				Log.info("Failed to Navigate to OrangeHRM Application PersonalDetailsPage - FAIL");
+				excelFile.setCellValue(rowIndex, 21, "Failed to Navigate to OrangeHRM Application PersonalDetailsPage - FAIL");
+			}
+				
+			
+			By EmployeeListFirstNameLocator=By.id(property.getProperty("EmployeeListFirstNameProperty"));
+			WebElement EmployeeListFirstName=driver.findElement(EmployeeListFirstNameLocator);
+			String actual_EmployeeListFirstName=EmployeeListFirstName.getAttribute("value");
+			excelFile.setCellValue(rowIndex, 22, actual_EmployeeListFirstName);
+			if(actual_EmployeeListFirstName.equals(expected_FirstNameTestData))
+			{
+				Log.info("Successfully Validated First Name Of Employee - Pass");
+				excelFile.setCellValue(rowIndex, 23, "Successfully Validated First Name Of Employee - Pass");
+			}
+			else
+			{
+				Log.info("Failed to Validate First Name Of Employee - FAIL");
+				excelFile.setCellValue(rowIndex, 23, "Failed to Validate First Name Of Employee - FAIL");
+			}
+			By EmployeeListMiddleNameLocator=By.id(property.getProperty("EmployeeListMiddleNameProperty"));
+			WebElement EmployeeListMiddletName=driver.findElement(EmployeeListMiddleNameLocator);
+			String actual_EmployeeListMiddleName=EmployeeListMiddletName.getAttribute("value");
+			excelFile.setCellValue(rowIndex, 24, actual_EmployeeListMiddleName);
+			if(actual_EmployeeListMiddleName.equals(expected_MiddleNameTestData))
+			{
+				Log.info("Successfully Validated Middle Name Of Employee - Pass");
+				excelFile.setCellValue(rowIndex, 25, "Successfully Validated Middle Name Of Employee - Pass");
+			}
+			else
+			{
+				Log.info("Failed to Validate Middle Name Of Employee - FAIL");
+				excelFile.setCellValue(rowIndex, 25, "Failed to Validate Middle Name Of Employee - FAIL");
+			}
+			By EmployeeListLastNameLocator=By.id(property.getProperty("EmployeeListFirstNameProperty"));
+			WebElement EmployeeListLastName=driver.findElement(EmployeeListLastNameLocator);
+			String actual_EmployeeListLastName=EmployeeListLastName.getAttribute("value");
+			excelFile.setCellValue(rowIndex, 26, actual_EmployeeListLastName);
+			if(actual_EmployeeListLastName.equals(expected_lastNameTestData))
+			{
+				Log.info("Successfully Validated Last Name Of Employee - PASS");
+				excelFile.setCellValue(rowIndex, 27, "Successfully Validated Last Name Of Employee - PASS");
+			}	
+			else
+			{
+				Log.info("Failed to Validate Last Name Of Employee - FAIL");
+				excelFile.setCellValue(rowIndex, 27, "Failed to Validate Last Name Of Employee - FAIL");
+			}
+			
+			
+			
+			
+			By EmployeeListEmployeeIdLocator=By.id(property.getProperty("EmployeeListEmployeeIdProperty"));
+			WebElement EmployeeListEmployeeId=driver.findElement(EmployeeListEmployeeIdLocator);
+			String actual_EmployeeListEmployeeId=EmployeeListEmployeeId.getAttribute("value");
+			excelFile.setCellValue(rowIndex, 28, actual_EmployeeListEmployeeId);
+			if(actual_EmployeeListEmployeeId.equals( Expected_EmployeeIdTestData))
+			{
+				Log.info("Successfully Validated Id Of Employee - PASS");
+				excelFile.setCellValue(rowIndex, 27, "Successfully Validated Id Of Employee - PASS");
+			}
+			else
+			{
+				Log.info("Failed to Validated Id Of Employee - FAIL");
+				excelFile.setCellValue(rowIndex, 27, "Failed Validated Id Of Employee - FAIL");
+			}
+			
+			
+			
+			
+			
+			//validating Uploaded Photo File
+			By EmployeePhotographLocator=By.id(property.getProperty("UploadedPhotoProperty"));
+			WebElement EmployeePhotograph=driver.findElement(EmployeePhotographLocator);
+			boolean flag=EmployeePhotograph.isDisplayed();
+			if(flag)
+			{
+				Log.info("Employee Photograph Uploaded Successfully - PASS");
+			}
+			else
+			{
+				Log.info("Employee Photograph Uploaded Failed - FAIL");
+			}
+			rowIndex++;	
+		}
+	}		
+
+	@Test(priority=4)
+		private void validateHomePage() throws IOException 
+		{
+			String expected_HomePageText=excelFile.getCellValue(1, 9);
+			By HomePageWelocomeAdminLocator=By.linkText(property.getProperty("WelcomeAdminProperty"));
+			String actual_HomePageText=driver.findElement(HomePageWelocomeAdminLocator).getText();
+			excelFile.setCellValue(1, 10, actual_HomePageText);
+			if(actual_HomePageText.contains(expected_HomePageText))
+			{
+				Log.info("Successfully Navigated to the OrangeHRM Application HomePage - Pass");
+				excelFile.setCellValue(rowIndex, 11, "Successfully Navigated to the OrangeHRM Application HomePage - Pass");
+			}
+			else
+			{
+				Log.info("Failed to Navigate to the OrangeHRM Application HomePage - FAIL");
+				OHRMScreenShot.takeScreenShot(driver,"FailedToNavigateHomePage");
+				excelFile.setCellValue(rowIndex, 11, actual_HomePageText);
+			}
+		}
+	@Test(priority=5)
+		private void Logout() throws IOException 
+		{
+			
+			By HomePageWelcomeAdminLocator=By.linkText(property.getProperty("WelcomeAdminProperty"));
+			driver.findElement(HomePageWelcomeAdminLocator).click();
+			By homePageLogoutElementLocator=By.linkText(property.getProperty("logOutProperty"));
+			driver.findElement(homePageLogoutElementLocator).click();
+			
+			By loginPageLoginPanelTextLocator=By.id(property.getProperty("logInPageLogInPanelProperty"));
+			String actual_loginPageLoginPanelTextAfterLogout=driver.findElement(loginPageLoginPanelTextLocator).getText();
+			excelFile.setCellValue(1, 31, actual_loginPageLoginPanelTextAfterLogout);
+			String expected_loginPageLoginPanelTextAfterLogout=excelFile.getCellValue(1, 30);
+			if(actual_loginPageLoginPanelTextAfterLogout.equals(expected_loginPageLoginPanelTextAfterLogout))
+			{
+				Log.info("Successfully Logout from the OrangeHRM Application - PASS");
+				excelFile.setCellValue(1, 32, "Successfully Logout from the OrangeHRM Application - PASS" );
+			}
+			else
+			{
+				Log.info("Failed to Logout from OrangeHRM Application - FAIL");
+				excelFile.setCellValue(1, 32, "Failed to Logout from OrangeHRM Application - FAIL" );
+			}
+			
+		}
+
+}

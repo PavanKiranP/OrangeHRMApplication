@@ -1,0 +1,15 @@
+package stepDefinitions;
+
+import org.junit.runner.RunWith;
+
+import cucumber.api.CucumberOptions;
+import cucumber.api.junit.Cucumber;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(features="OrangeHRMApplication",//folder name of the feature file
+					glue="stepDefinitions",//connects the featureFile with methods class
+					monochrome=true)//Remove the junk values in the cosole
+
+public class TestRunner {
+
+}
